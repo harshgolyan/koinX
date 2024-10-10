@@ -25,7 +25,7 @@ The `stats` API fetches the current price of specified crypto.
   
 
 
-### 1. deviation API
+### 3. deviation API
 
 The `deviation` API fetches the standard deviation of last 100 enteries in db of a specified crypto.
 
