@@ -1,7 +1,7 @@
 const axios = require('axios');
 const CryptoCurrency = require("../models/cryptoSchema");
 
-const cryptoControllerData = async () => {
+const fetchCryptoData = async () => {
     try {
         const cryptocurrencies = ['bitcoin', 'matic-network', 'ethereum'];
         const promises = cryptocurrencies.map((crypto) =>
@@ -31,13 +31,26 @@ const cryptoControllerData = async () => {
             });
 
             await cryptocurrency.save();
-            insertedNames.push(name);
+            insertedNames.push(cryptocurrency);
         }
-       console.log(`Inserted data for: ${insertedNames.join(', ')}`);
+
+        return { insertedNames };
     } catch (error) {
         console.error('Error fetching cryptocurrency data:', error);
-        rconsole.log({ error: "Failed to add data to the database" });
+        throw new Error('Failed to fetch cryptocurrency data');
     }
 };
 
-module.exports = cryptoControllerData;
+const cryptoControllerData = async (req, res) => {
+    try {
+        const result = await fetchCryptoData();
+        res.json(result.insertedNames); 
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+module.exports = {
+    cryptoControllerData,
+    fetchCryptoData, 
+};
